@@ -186,7 +186,9 @@ autocmd FileType coffee    setlocal sw=2 sts=2 ts=2 et
 autocmd BufNewFile,BufRead Makefile  setf Make
 autocmd BufNewFile,BufRead Makefile  set tabstop=4 shiftwidth=4 noet
 
-
+"*.fish
+autocmd BufNewFile,BufRead *.fish  setf sh
+autocmd BufNewFile,BufRead *.fish  set tabstop=4 shiftwidth=4 et
 
 " 文字コードとか
 set fileformats=unix,dos,mac
