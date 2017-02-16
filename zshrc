@@ -27,6 +27,7 @@ export PATH=$HOME/.bin:$PATH
 
 # alias
 alias less="less -x4"
+alias tmux="tmux -2"
 
 # less source-highlight
 export LESS=' -R'
