@@ -15,6 +15,8 @@ set __fish_git_prompt_showcolorhints 'yes'
 # rename tmux window
 function window_rename --on-event fish_preexec
     if test -n (echo $TERM | grep -e screen -e tmux)
-        tmux rename-window (printf "%.16s" $argv[1])
+        if test -n $argv[1]
+            tmux rename-window (printf "%.16s" $argv[1])
+        end
     end
 end
