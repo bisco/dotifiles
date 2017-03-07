@@ -12,6 +12,9 @@ set __fish_git_prompt_showuntrackedfiles 'yes'
 set __fish_git_prompt_show_informative_status 'yes'
 set __fish_git_prompt_showcolorhints 'yes'
 
+# fish hilighting
+set fish_color_redirection green --bold
+
 # rename tmux window
 function window_rename --on-event fish_preexec
     if test -n (echo $TERM | grep -e screen -e tmux)
