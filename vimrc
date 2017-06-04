@@ -18,6 +18,9 @@ set tabstop=4
 set expandtab
 set showcmd
 set shiftwidth=4
+set list
+set listchars=tab:>\ ,trail:.
+hi SpecialKey ctermfg=darkgrey
 
 " インデント
 set autoindent
