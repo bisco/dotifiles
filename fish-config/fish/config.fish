@@ -4,6 +4,10 @@ if test -d $HOME/.bin
     set PATH $HOME/.bin $PATH
 end
 
+# golang
+set GOPATH $HOME/go
+set PATH $GOPATH/bin $GOROOT/bin $PATH
+
 # fish git prompt
 set __fish_git_prompt_showdirtystate 'yes'
 set __fish_git_prompt_showstashstate 'yes'
