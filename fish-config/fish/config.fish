@@ -23,7 +23,12 @@ set fish_color_redirection green --bold
 function window_rename --on-event fish_preexec
     if test -n (echo $TERM | grep -e screen -e tmux)
         if test -n $argv[1]
-            tmux rename-window (printf "%.16s" $argv[1])
+            tmux rename-window (printf "%.16s" (echo $argv[1] | sed -e "s/\\\//g" | tr -d "\n"))
         end
     end
+end
+
+# merge history between shells
+function his
+    history --merge
 end
