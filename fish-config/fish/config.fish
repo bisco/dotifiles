@@ -32,3 +32,5 @@ end
 function his
     history --merge
 end
+
+set fish_greeting ""
