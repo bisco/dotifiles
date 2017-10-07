@@ -1,12 +1,12 @@
 # path
-set PATH /sbin /bin /usr/sbin /usr/local/sbin $PATH
+set -x PATH /sbin /bin /usr/sbin /usr/local/sbin $PATH
 if test -d $HOME/.bin
-    set PATH $HOME/.bin $PATH
+    set -x PATH $HOME/.bin $PATH
 end
 
 # golang
-set GOPATH $HOME/go
-set PATH $GOPATH/bin $GOROOT/bin $PATH
+set -x GOPATH $HOME/go
+set -x PATH $GOPATH/bin $GOROOT/bin $PATH
 
 # fish git prompt
 set __fish_git_prompt_showdirtystate 'yes'
