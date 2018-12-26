@@ -33,27 +33,76 @@ alias tmux="tmux -2"
 export LESS=' -R'
 #export LESSOPEN='| /opt/local/bin/src-hilite-lesspipe.sh %s'
 
-## Default shell configuration
-#
+#-------------------------------------------#
+# Default shell configuration
+#-------------------------------------------#
 # set prompt
-#
-autoload colors
-colors
+setopt prompt_subst
+autoload -U colors; colors
+
+# get branch name and hash
+function branch-status-check {
+    local prefix branchname suffix
+    # .gitの中だから除外
+    if [[ "$PWD" =~ '/\.git(/.*)?$' ]]; then
+        return
+    fi
+    branchname=`get-branch-name`
+    # ブランチ名が無いので除外
+    if [[ -z $branchname ]]; then
+        return
+    fi
+    shorthash=`get-branch-hash`
+    prefix=`get-branch-status` #色だけ返ってくる
+    suffix='%{'${reset_color}'%}'
+    echo ${prefix}${branchname}\(${shorthash}\)${suffix}
+}
+
+function get-branch-name {
+    # gitディレクトリじゃない場合のエラーは捨てます
+    echo `git rev-parse --abbrev-ref HEAD 2> /dev/null`
+}
+
+function get-branch-status {
+    local res color
+    output=`git status --short 2> /dev/null`
+    if [ -z "$output" ]; then
+        res=':' # status Clean
+        color='%{'${fg[green]}'%}'
+    elif [[ $output =~ "[\n]?\?\? " ]]; then
+        res='?:' # Untracked
+        color='%{'${fg[yellow]}'%}'
+    elif [[ $output =~ "[\n]? M " ]]; then
+        res='M:' # Modified
+        color='%{'${fg[red]}'%}'
+    else
+        res='A:' # Added to commit
+        color='%{'${fg[cyan]}'%}'
+    fi
+    # echo ${color}${res}'%{'${reset_color}'%}'
+    echo ${color} # 色だけ返す
+}
+
+function get-branch-hash {
+    echo `git rev-parse --short HEAD 2> /dev/null`
+}
+
+
 if [ ${TERM} != "dumb" ] ; then
     case ${UID} in
     0)
-        PROMPT="%B%{${fg[white]}%}%/#%{${reset_color}%}%b "
-        PROMPT2="%B%{${fg[white]}%}%_#%{${reset_color}%}%b "
-        SPROMPT="%B%{${fg[white]}%}%r is correct? [n,y,a,e]:%{${reset_color}%}%b "
-        [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
-        PROMPT="%{${fg[cyan]}%}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
+        PROMPT="%B%{${fg[magenta]}%}%/"$'\n'"#%{${reset_color}%}%b "
+        PROMPT2="%B%{${fg[magenta]}%}%_#%{${reset_color}%}%b "
+        SPROMPT="%B%{${fg[magenta]}%}%r is correct? [n,y,a,e]:%{${reset_color}%}%b "
+        #[ -n "${REMOTEHOST}${SSH_CONNECTION}" ] &&
+        PROMPT="%{${fg[red]}%}$(whoami)"@"$(echo ${HOST%%.*}) ${PROMPT}"
         ;;
     *)
-        PROMPT="%{${fg[cyan]}%}%/%%%{${reset_color}%} "
-        PROMPT2="%{${fg[cyan]}%}%_%%%{${reset_color}%} "
-        SPROMPT="%{${fg[cyan]}%}%r is correct? [n,y,a,e]:%{${reset_color}%} "
-        [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
-        PROMPT="%{${fg[yellow]}%}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
+        PROMPT="%F{yellow}%/ %f"$(branch-status-check)$'\n'"%F{yellow}>%f "
+        PROMPT2="%{${fg[yellow]}%}%_>%{${reset_color}%} "
+        SPROMPT="%{${fg[yellow]}%}%r is correct? [n,y,a,e]:%{${reset_color}%} "
+        #[ -n "${REMOTEHOST}${SSH_CONNECTION}" ] &&
+        PROMPT="%{${fg[cyan]}%}$(whoami)"@"$(echo ${HOST%%.*}) ${PROMPT}"
         ;;
     esac
 else
@@ -76,55 +125,6 @@ else
 fi
 
 
-## RPROMPT from https://gist.github.com/otiai10/8034038#file-zshrc-sh
-RPROMPT=$'`branch-status-check`' # %~はpwd
-setopt prompt_subst #表示毎にPROMPTで設定されている文字列を評価する
-# {{{ methods for RPROMPT
-# fg[color]表記と$reset_colorを使いたい
-# @see https://wiki.archlinux.org/index.php/zsh
-# autoload -U colors; colors
-function branch-status-check {
-    local prefix branchname suffix
-    # .gitの中だから除外
-    if [[ "$PWD" =~ '/\.git(/.*)?$' ]]; then
-        return
-    fi
-    branchname=`get-branch-name`
-    # ブランチ名が無いので除外
-    if [[ -z $branchname ]]; then
-        return
-    fi
-    shorthash=`get-branch-hash`
-    prefix=`get-branch-status` #色だけ返ってくる
-    suffix='%{'${reset_color}'%}'
-    echo ${prefix}${branchname}\(${shorthash}\)${suffix}
-}
-function get-branch-name {
-    # gitディレクトリじゃない場合のエラーは捨てます
-    echo `git rev-parse --abbrev-ref HEAD 2> /dev/null`
-}
-function get-branch-status {
-    local res color
-    output=`git status --short 2> /dev/null`
-    if [ -z "$output" ]; then
-        res=':' # status Clean
-        color='%{'${fg[green]}'%}'
-    elif [[ $output =~ "[\n]?\?\? " ]]; then
-        res='?:' # Untracked
-        color='%{'${fg[yellow]}'%}'
-    elif [[ $output =~ "[\n]? M " ]]; then
-        res='M:' # Modified
-        color='%{'${fg[red]}'%}'
-    else
-        res='A:' # Added to commit
-        color='%{'${fg[cyan]}'%}'
-    fi
-    # echo ${color}${res}'%{'${reset_color}'%}'
-    echo ${color} # 色だけ返す
-}
-function get-branch-hash {
-    echo `git rev-parse --short HEAD 2> /dev/null`
-}
 
 # auto change directory
 #
@@ -161,7 +161,7 @@ bindkey -e
 
 # historical backward/forward search with linehead string binded to ^P/^N
 #
-autoload history-search-end
+autoload -U history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 bindkey "^p" history-beginning-search-backward-end
@@ -182,13 +182,12 @@ setopt share_history        # share command history data
 ## Completion configuration
 #
 fpath=(~/.zsh/functions/Completion ${fpath})
-autoload -U compinit
-compinit
+autoload -U compinit; compinit
 
 
 ## zsh editor
 #
-autoload zed
+autoload -U zed
 
 
 ## Prediction configuration
@@ -284,8 +283,12 @@ esac
 
 
 
-# set terminal title including current directory
+
+## load user .zshrc configuration file
 #
+[ -f ~/.zshrc.mine ] && source ~/.zshrc.mine
+
+# set terminal title including current directory
 case "${TERM}" in
     kterm*|xterm*)
         precmd() {
@@ -293,10 +296,6 @@ case "${TERM}" in
         }
         ;;
 esac
-
-## load user .zshrc configuration file
-#
-[ -f ~/.zshrc.mine ] && source ~/.zshrc.mine
 
 if [ "$TERM" = "screen" ]; then
     chpwd() { echo -n "_`dirs`\\" }
