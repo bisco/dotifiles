@@ -98,11 +98,11 @@ if [ ${TERM} != "dumb" ] ; then
         PROMPT="%{${fg[red]}%}$(whoami)"@"$(echo ${HOST%%.*}) ${PROMPT}"
         ;;
     *)
-        PROMPT="%F{yellow}%/ %f"$(branch-status-check)$'\n'"%F{yellow}>%f "
-        PROMPT2="%{${fg[yellow]}%}%_>%{${reset_color}%} "
-        SPROMPT="%{${fg[yellow]}%}%r is correct? [n,y,a,e]:%{${reset_color}%} "
+        PROMPT="%F{cyan}%/ %f"$'`branch-status-check`'$'\n'"%F{cyan}>%f "
+        PROMPT2="%{${fg[cyan]}%}%_>%{${reset_color}%} "
+        SPROMPT="%{${fg[cyan]}%}%r is correct? [n,y,a,e]:%{${reset_color}%} "
         #[ -n "${REMOTEHOST}${SSH_CONNECTION}" ] &&
-        PROMPT="%{${fg[cyan]}%}$(whoami)"@"$(echo ${HOST%%.*}) ${PROMPT}"
+        PROMPT="%{${fg[yellow]}%}$(whoami)"@"$(echo ${HOST%%.*}) ${PROMPT}"
         ;;
     esac
 else
