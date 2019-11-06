@@ -10,6 +10,7 @@
 #setopt brace_ccl
 
 export PATH=$HOME/.bin:$PATH
+export DISPLAY=`echo $SSH_CONNECTION | perl -lane 'print $F[0]'`:0.0
 
 # node.js
 # export PATH=$HOME/.bin/node/bin:$PATH
