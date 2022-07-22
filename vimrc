@@ -200,3 +200,5 @@ augroup MyXML
     autocmd!
     autocmd Filetype xml inoremap <buffer> </ </<C-x><C-o>
 augroup END
+
+command Kernel set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab
