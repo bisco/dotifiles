@@ -10,7 +10,11 @@
 #setopt brace_ccl
 
 export PATH=$HOME/.bin:$PATH
-export DISPLAY=`echo $SSH_CONNECTION | perl -lane 'print $F[0]'`:0.0
+if [[ "${OSTYPE}" == darwin* ]]; then
+# 何もしない
+else
+    export DISPLAY=`echo $SSH_CONNECTION | perl -lane 'print $F[0]'`:0.0
+fi
 
 # node.js
 # export PATH=$HOME/.bin/node/bin:$PATH
