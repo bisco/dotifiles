@@ -9,7 +9,7 @@
 #xset -b
 #setopt brace_ccl
 
-export PATH=$HOME/.bin:$PATH
+export PATH=$HOME/.bin:$HOME/.local/bin:$PATH
 if [[ "${OSTYPE}" == darwin* ]]; then
 # 何もしない
 else
@@ -29,6 +29,8 @@ fi
 # export GOROOT=$HOME/go
 # export PATH=$GOROOT/bin:$PATH
 
+# snap
+# export PATH=/snap/bin:$PATH
 
 # alias
 alias less="less -x4"
